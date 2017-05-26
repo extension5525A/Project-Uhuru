@@ -1,0 +1,28 @@
+
+public class Robot {
+
+	//This class with hold all the information about the robot that the program needs to be able to make the recoding and running code
+	
+	
+	//This varible tells the program of its a H drive, X drive, or meccanum drive. They are H,X, and M respectively
+	char drive;
+	//This holds the pin names for the motors. the actual number of the motors with be place plus 1 because the arrays
+	//start at 0
+	String[] pinNames = new String[10];
+	//This hold what recording device is used on each motor. The possibles are integrated, shaft encoder, potentiometer, or none. The code
+	//is I, S, P, or N respectively
+	char[] pinRecording = new char[10];
+	//This will hold what motors are liked to each other with the parent motor, the one that is being copied, and the second column
+	//is the copier motor. This is used so that if more than one motor runs the same way you don't have to have a sensor on each
+	//motor. A negitive sign on the number on the second column means that ir runs exactly opposite as the copied motor. The linked size will
+	//Be determined in the constructor because it is unknown how many motors are linked an it will vary from bot to bot
+	int[][] linked; 
+	//This is for the order that the integrated motors are connected in so that the program is able to known which motor coresponds
+	//to which signal
+	String daisyChainOrder;
+	//This will be a list of buttons used
+	String[] buttons;
+	//This will be the list of axis used
+	String[] axis;
+	
+}//Class
