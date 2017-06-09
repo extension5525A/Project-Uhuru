@@ -81,8 +81,13 @@ task autonomous()
 
 task usercontrol()
 {
-  // User control code here, inside the loop
+ 
+  //Sets motor encoder value equal to zero
+	nMotorEncoder[FL] = 0;
 
+	//Counts iterations through while loop so there isn't a constant stream of output data
+	int iterations = 0;
+	
   while (true)
   {
   
@@ -104,6 +109,14 @@ task usercontrol()
    }//end if else
    
    
+   //Limits amount of output data because computer was lagging
+   if(iterations == 20){
+  	 //Should Print value of motor encoder
+   	 writeDebugStreamLine("int x is: %d", nMotorEncoder[FL]);
+   	 
+   	 iterations = 0;
+   	 
+   }
     
   }//While
   
