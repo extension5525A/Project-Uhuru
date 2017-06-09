@@ -2,7 +2,7 @@
 #pragma config(Sensor, dgtl1,  ,               sensorQuadEncoder)
 #pragma config(Sensor, I2C_1,  FL,             sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Motor,  port1,           BS,            tmotorVex393HighSpeed_HBridge, openLoop)
-#pragma config(Motor,  port2,           FL,            tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port2,           FL,            tmotorVex393HighSpeed_MC29, openLoop, encoderPort, I2C_1)
 #pragma config(Motor,  port3,           FR,            tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port4,           BL,            tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port5,           BR,            tmotorVex393HighSpeed_MC29, openLoop)
@@ -81,44 +81,47 @@ task autonomous()
 
 task usercontrol()
 {
- 
+
   //Sets motor encoder value equal to zero
 	nMotorEncoder[FL] = 0;
 
 	//Counts iterations through while loop so there isn't a constant stream of output data
 	int iterations = 0;
-	
+
   while (true)
   {
-  
+
   //Driving code in tank drive
   motor[FR] = -vexRT[Ch2];
   motor[BR] = -vexRT[Ch2];
   motor[FL] = vexRT[Ch3];
   motor[BL] = vexRT[Ch3];
-  
-  
-  
+
+
+
   //If 8U or 8D is pressed moves BS which is the bar spinner
-	 if(vexRT[Btn8U] == 1){  
+	 if(vexRT[Btn8U] == 1){
    	 motor[BS] = 30;
  	 }else if(vexRT[Btn8D] == 1){
   		motor[BS] = -30;
  	 }else{
  	  motor[BS] = 0;
    }//end if else
-   
-   
-   //Limits amount of output data because computer was lagging
+
+
+   //Limits amount of output data
    if(iterations == 20){
   	 //Should Print value of motor encoder
-   	 writeDebugStreamLine("int x is: %d", nMotorEncoder[FL]);
-   	 
+   	 writeDebugStreamLine("Shafy Position is: %d", nMotorEncoder[FL]);
+
    	 iterations = 0;
-   	 
+
    }
-    
+   
+   //Increases to count how many iterations through the while loop	
+	 iterations ++;
+		 
   }//While
-  
-  
+
+
 }//User control
