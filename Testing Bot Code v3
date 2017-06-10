@@ -109,12 +109,40 @@ task usercontrol()
   {
 
   //Driving code in tank drive
-  motor[FR] = -vexRT[Ch2];
+  /*motor[FR] = -vexRT[Ch2];
   motor[BR] = -vexRT[Ch2];
   motor[FL] = vexRT[Ch3];
-  motor[BL] = vexRT[Ch3];
-
-
+  motor[BL] = vexRT[Ch3];*/
+	
+  //The driving is code this way so that it only drives at one speed and when the axis are full. This simplifies recording the autonomous because you don't have
+  //to worry about varible speed
+  
+  //Driving for Ch2 axis
+  if(vexRT[Ch2] > 100){
+		motor[FR] = -60;//The motor power is 60 so the bot is slower and easier to manuver
+		motor[BR] = -60;
+  }else if(vexRT[Ch2] < -100){
+		motor[FR] = 60;
+		motor[BR] = 60;
+  }else{
+  	motor[FR] = 0;
+		motor[BR] = 0;
+  }
+  
+  
+  //Driving for Ch3 axis
+  if(vexRT[Ch3] > 100){
+		motor[FL] = 60;//The motor power is 60 so the bot is slower and easier to manuver
+		motor[BL] = 60;
+  }else if(vexRT[Ch3] < -100){
+		motor[FL] = -60;
+		motor[BL] = -60;
+  }else{
+  	motor[FL] = 0;
+		motor[BL] = 0;
+  }
+  
+  
 
   //If 8U or 8D is pressed moves BS which is the bar spinner
 	 if(vexRT[Btn8U] == 1){
