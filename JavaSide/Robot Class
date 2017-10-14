@@ -1,28 +1,156 @@
+import java.util.Scanner;
 
 public class Robot {
 
 	//This class with hold all the information about the robot that the program needs to be able to make the recoding and running code
-	
-	
+
+
 	//This varible tells the program of its a H drive, X drive, or meccanum drive. They are H,X, and M respectively
-	char drive;
+	private char drive;
 	//This holds the pin names for the motors. the actual number of the motors with be place plus 1 because the arrays
 	//start at 0
-	String[] pinNames = new String[10];
+	private String[] pinNames = new String[10];
 	//This hold what recording device is used on each motor. The possibles are integrated, shaft encoder, potentiometer, or none. The code
 	//is I, S, P, or N respectively
-	char[] pinRecording = new char[10];
+	//This hold the number of pins
+	private int pinCount;
+	private char[] pinRecording = new char[10];
 	//This will hold what motors are liked to each other with the parent motor, the one that is being copied, and the second column
 	//is the copier motor. This is used so that if more than one motor runs the same way you don't have to have a sensor on each
 	//motor. A negitive sign on the number on the second column means that ir runs exactly opposite as the copied motor. The linked size will
 	//Be determined in the constructor because it is unknown how many motors are linked an it will vary from bot to bot
-	int[][] linked; 
+	private int[][] linked; 
 	//This is for the order that the integrated motors are connected in so that the program is able to known which motor coresponds
 	//to which signal
-	String daisyChainOrder;
+	private String daisyChainOrder;
 	//This will be a list of buttons used
-	String[] buttons;
+	private String[] buttons;
 	//This will be the list of axis used
-	String[] axis;
+	private String[] axis;
+
+	public Robot(Scanner sc){
+
+		System.out.println("Write the names of your pins in order from 1 to 10. Once you have written them all type done.");
+
+		setPinCount(0);
+
+		boolean done = false;
+
+		while(!done){
+
+			String input = sc.nextLine();
+			if(!input.equals("done") && getPinCount() != 10){
+				//System.out.println("in");
+				//Sets the name of the pin to that level of the array
+				setPinNamesValue(getPinCount(), input);
+				//Increases total count to match the amount of strings that populate pinNames
+				setPinCount(getPinCount() + 1);
+				//System.out.println(getPinCount());
+			}else{
+				//Uses this variable to break the while if the max amount of pins is reached or done is typed
+				done = true;
+				//Because the array starts at 0, this gets the number of pins to the correct amount
+				setPinCount(getPinCount() + 1);
+				//Tells the user they are done
+				System.out.println("Finished inputing pins");
+			}
+
+
+		}//While
+		
+		//System.out.println("out");
+
+
+
+	}//Constructor
+
+	public char getDrive() {
+		return drive;
+	}
+
+	public void setDrive(char drive) {
+		this.drive = drive;
+	}
+
+	public char[] getPinRecording() {
+		return pinRecording;
+	}
+
+	public void setPinRecording(char[] pinRecording) {
+		this.pinRecording = pinRecording;
+	}
+
+	public int[][] getLinked() {
+		return linked;
+	}
+
+	public void setLinked(int[][] linked) {
+		this.linked = linked;
+	}
+
+	public String getDaisyChainOrder() {
+		return daisyChainOrder;
+	}
+
+	public void setDaisyChainOrder(String daisyChainOrder) {
+		this.daisyChainOrder = daisyChainOrder;
+	}
+
+	public String[] getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(String[] buttons) {
+		this.buttons = buttons;
+	}
+
+	public String getButtonsValue(int place) {
+		return buttons[place];
+	}
+
+	public void setButtonsValue(int place, String value) {
+		buttons[place] = value;
+	}
+
+	public String[] getAxis() {
+		return axis;
+	}
+
+	public void setAxis(String[] axis) {
+		this.axis = axis;
+	}
+
+	public String getAxisValue(int place) {
+		return axis[place];
+	}
+
+	public void setAxisValue(int place, String value) {
+		axis[place] = value;
+	}
+
+	public String[] getPinNames() {
+		return pinNames;
+	}
+
+	public void setPinNames(String[] pinNames) {
+		this.pinNames = pinNames;
+	}
 	
+	public String getPinNamesValue(int place) {
+		return pinNames[place];
+	}
+
+	public void setPinNamesValue(int place, String value) {
+		pinNames[place] = value;
+	}
+
+	public int getPinCount() {
+		return pinCount;
+	}
+
+	public void setPinCount(int pinCount) {
+		this.pinCount = pinCount;
+	}
+
+
 }//Class
