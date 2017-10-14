@@ -1,0 +1,21 @@
+import java.util.Scanner;
+
+public class RobotTesterClass {
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+		
+		Robot scuttlebot = new Robot(sc);
+		
+		for(int i = 0; i < scuttlebot.getPinCount() - 1; i++){
+			
+			System.out.println(scuttlebot.getPinNamesValue(i));
+			
+			
+			
+		}
+
+	}
+
+}
