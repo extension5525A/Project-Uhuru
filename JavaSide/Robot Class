@@ -14,7 +14,7 @@ public class Robot {
 	//is I, S, P, or N respectively
 	//This hold the number of pins
 	private int pinCount;
-	private char[] pinRecording = new char[10];
+	private char[] pinSensor = new char[10];
 	//This will hold what motors are liked to each other with the parent motor, the one that is being copied, and the second column
 	//is the copier motor. This is used so that if more than one motor runs the same way you don't have to have a sensor on each
 	//motor. A negitive sign on the number on the second column means that ir runs exactly opposite as the copied motor. The linked size will
@@ -29,17 +29,19 @@ public class Robot {
 	private String[] axis;
 
 	public Robot(Scanner sc){
-
+		
+		
+		//This section sets up the pinNames array
 		System.out.println("Write the names of your pins in order from 1 to 10. Once you have written them all type done.");
 
 		setPinCount(0);
 
 		boolean done = false;
-
+		
 		while(!done){
 
 			String input = sc.nextLine();
-			if(!input.equals("done") && getPinCount() != 10){
+			if(!input.equals("done") && getPinCount() != 9){
 				//System.out.println("in");
 				//Sets the name of the pin to that level of the array
 				setPinNamesValue(getPinCount(), input);
@@ -49,8 +51,6 @@ public class Robot {
 			}else{
 				//Uses this variable to break the while if the max amount of pins is reached or done is typed
 				done = true;
-				//Because the array starts at 0, this gets the number of pins to the correct amount
-				setPinCount(getPinCount() + 1);
 				//Tells the user they are done
 				System.out.println("Finished inputing pins");
 			}
@@ -58,7 +58,18 @@ public class Robot {
 
 		}//While
 		
-		//System.out.println("out");
+		
+		//This sets up pinSensor array
+		System.out.println("Put in what sensor is on each motor. The options are integrated, shaft encoder, potentiometer, or none. "
+				+ "The code is I, S, P, or N respectively so just put in the CAPITAL letter");
+		
+		setPinSensor(new char[getPinCount()]);
+		
+		for(int i = 0; i < getPinCount(); i++){
+			
+			setPinSensorValue(i, sc.next().charAt(0));
+			
+		}//for
 
 
 
@@ -72,12 +83,20 @@ public class Robot {
 		this.drive = drive;
 	}
 
-	public char[] getPinRecording() {
-		return pinRecording;
+	public char[] getPinSensor() {
+		return pinSensor;
 	}
 
-	public void setPinRecording(char[] pinRecording) {
-		this.pinRecording = pinRecording;
+	public void setPinSensor(char[] pinSensor) {
+		this.pinSensor = pinSensor;
+	}
+	
+	public char getPinSensorValue(int place) {
+		return pinSensor[place];
+	}
+
+	public void setPinSensorValue(int place, char value) {
+		pinSensor[place] = value;
 	}
 
 	public int[][] getLinked() {
