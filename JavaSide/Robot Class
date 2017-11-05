@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Robot {
@@ -9,12 +10,15 @@ public class Robot {
 	private char drive;
 	//This holds the pin names for the motors. the actual number of the motors with be place plus 1 because the arrays
 	//start at 0
-	private String[] pinNames = new String[10];
+	/*private String[] pinNames = new String[10];
 	//This hold what recording device is used on each motor. The possibles are integrated, shaft encoder, potentiometer, or none. The code
 	//is I, S, P, or N respectively
 	//This hold the number of pins
 	private int pinCount;
-	private char[] pinSensor = new char[10];
+	//This holds sensor type. The options are integrated, shaft encoder, potentiometer, or none. The code is I, S, P, or N respectively
+	private char[] pinSensor;
+	//This will hold the desired Power for pins with sensors
+	private int[] pinPower;
 	//This will hold what motors are liked to each other with the parent motor, the one that is being copied, and the second column
 	//is the copier motor. This is used so that if more than one motor runs the same way you don't have to have a sensor on each
 	//motor. A negitive sign on the number on the second column means that ir runs exactly opposite as the copied motor. The linked size will
@@ -22,22 +26,26 @@ public class Robot {
 	private int[][] linked; 
 	//This is for the order that the integrated motors are connected in so that the program is able to known which motor coresponds
 	//to which signal
-	private String daisyChainOrder;
+	private String daisyChainOrder;*/
 	//This will be a list of buttons used
 	private String[] buttons;
 	//This will be the list of axis used
 	private String[] axis;
+	//Name of the robot
+	private String name;
+	//List of motors
+	private MotorPort[] motors;
 
 	public Robot(Scanner sc){
-		
-		
-		//This section sets up the pinNames array
+
+
+		/*//This section sets up the pinNames array
 		System.out.println("Write the names of your pins in order from 1 to 10. Once you have written them all type done.");
 
 		setPinCount(0);
 
 		boolean done = false;
-		
+
 		while(!done){
 
 			String input = sc.nextLine();
@@ -57,21 +65,133 @@ public class Robot {
 
 
 		}//While
-		
-		
+
+
 		//This sets up pinSensor array
 		System.out.println("Put in what sensor is on each motor. The options are integrated, shaft encoder, potentiometer, or none. "
 				+ "The code is I, S, P, or N respectively so just put in the CAPITAL letter");
-		
+
 		setPinSensor(new char[getPinCount()]);
-		
+
 		for(int i = 0; i < getPinCount(); i++){
-			
+
 			setPinSensorValue(i, sc.next().charAt(0));
-			
+
 		}//for
 
 
+		//This sets up desired power for motors with sensors
+		System.out.println("After each following motor port name, type the power you want the motor to be run at.");
+
+		for(int i = 0; i < getPinCount(); i++){
+
+			System.out.println(getPinNamesValue(i));
+			String input = sc.nextLine();
+
+
+		}//for*/
+
+
+
+		String input;
+
+		//Naming the robot
+		System.out.println("What is the name of your robot?");
+		setName(sc.nextLine());
+
+
+		ArrayList<MotorPort> motorsTemp = new ArrayList<MotorPort>();
+
+		boolean done = false;
+
+		//Setting up each motorport
+		for(int i = 0; !done && i != 9; i++){
+
+			motorsTemp.add(new MotorPort());
+
+			//This sets what pin the motor is on
+			System.out.println("What pin is this?");
+			motorsTemp.get(i).setPin((int) sc.nextLong()); 
+
+			//This gets the name of the port
+			System.out.println("What is the name of the port?");
+			input = sc.next();
+			motorsTemp.get(i).setName(input);
+
+			//This gets the sensor on the pin
+			System.out.println("Put in what sensor is on each motor. The options are integrated, shaft encoder, potentiometer, or none. "
+					+ "The code is I, S, P, or N respectively so just put in the CAPITAL letter");
+			motorsTemp.get(i).setSensor(sc.next().charAt(0));
+
+			//This gets the daisy chain order if I is the sensor
+			if(motorsTemp.get(i).getSensor() == 'E'){
+				
+				System.out.println("What position in the motor in the daisy chain");
+				motorsTemp.get(i).setDaisyChainOrder((int) sc.nextLong());
+				
+			}else{
+
+				//This gets what port the sensor is in
+				System.out.println("What is the pin number of the sensor?");
+				motorsTemp.get(i).setSensorPort((int) sc.nextLong());
+				
+			}//if
+
+			//This gets what motor is is copying and of it is opposite
+			System.out.println("What motor port is this motor copying? Put 0 if none.");
+			motorsTemp.get(i).setCopy((int) sc.nextLong());
+
+
+			System.out.println("Is this your last motor? Yes or no");
+			input = sc.next();
+			if(input.equals("yes")){
+
+				done = true;
+			}// if
+
+
+		}//while
+
+
+		motors = new MotorPort[motorsTemp.size()];
+
+
+		//This will sort the motors by pin and put them into an array
+		int motorsIn = 0;
+
+		larger:
+		for(int i = 0; i < 10; i++){
+
+			int motorPlace = 0;
+			
+			outer:
+			for(int a = 0; a < motorsTemp.size(); a++){
+				
+				/*System.out.println("i:" + i);
+				System.out.println("a:" + a);
+				System.out.println("pin:" + motorsTemp.get(a).getPin());*/
+				
+				if(i + 1 == motorsTemp.get(a).getPin()){	
+
+					motorPlace = a;
+					break outer;
+				}	
+				
+				/*System.out.println("place:" + motorPlace);
+				System.out.println("");*/
+				
+			}//nested for
+			
+			
+			motors[i] = motorsTemp.get(motorPlace);
+			motorsIn++;
+			
+			if(motorsIn == motorsTemp.size()){
+				break larger;
+				
+			}
+
+		}//for
 
 	}//Constructor
 
@@ -83,23 +203,23 @@ public class Robot {
 		this.drive = drive;
 	}
 
-	public char[] getPinSensor() {
+	/*public char[] getPinSensor() {
 		return pinSensor;
 	}
 
 	public void setPinSensor(char[] pinSensor) {
 		this.pinSensor = pinSensor;
 	}
-	
+
 	public char getPinSensorValue(int place) {
 		return pinSensor[place];
 	}
 
 	public void setPinSensorValue(int place, char value) {
 		pinSensor[place] = value;
-	}
+	}*/
 
-	public int[][] getLinked() {
+	/*public int[][] getLinked() {
 		return linked;
 	}
 
@@ -113,7 +233,7 @@ public class Robot {
 
 	public void setDaisyChainOrder(String daisyChainOrder) {
 		this.daisyChainOrder = daisyChainOrder;
-	}
+	}*/
 
 	public String[] getButtons() {
 		return buttons;
@@ -147,14 +267,14 @@ public class Robot {
 		axis[place] = value;
 	}
 
-	public String[] getPinNames() {
+	/*public String[] getPinNames() {
 		return pinNames;
 	}
 
 	public void setPinNames(String[] pinNames) {
 		this.pinNames = pinNames;
 	}
-	
+
 	public String getPinNamesValue(int place) {
 		return pinNames[place];
 	}
@@ -169,6 +289,46 @@ public class Robot {
 
 	public void setPinCount(int pinCount) {
 		this.pinCount = pinCount;
+	}
+
+	public int[] getPinPower() {
+		return pinPower;
+	}
+
+	public void setPinPower(int[] pinPower) {
+		this.pinPower = pinPower;
+	}
+
+	public int getPinPowerValue(int place) {
+		return pinPower[place];
+	}
+
+	public void setPinPowerValue(int place, int value) {
+		pinPower[place] = value;
+	}*/
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public MotorPort[] getMotors() {
+		return motors;
+	}
+
+	public void setMotors(MotorPort[] motors) {
+		this.motors = motors;
+	}
+
+	public MotorPort getMotorsValue(int place) {
+		return motors[place];
+	}
+
+	public void setMotorsValue(int place, MotorPort value) {
+		motors[place] = value;
 	}
 
 
