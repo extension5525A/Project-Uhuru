@@ -1,0 +1,49 @@
+
+public class MotorPort {
+
+	private String name;
+	private int pin;
+	private char sensor;
+	private int sensorPort;
+	private int copy;
+	private int daisyChainOrder;
+	
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getPin() {
+		return pin;
+	}
+	public void setPin(int pin) {
+		this.pin = pin;
+	}
+	public char getSensor() {
+		return sensor;
+	}
+	public void setSensor(char sensor) {
+		this.sensor = sensor;
+	}
+	public int getCopy() {
+		return copy;
+	}
+	public void setCopy(int copy) {
+		this.copy = copy;
+	}
+	public int getDaisyChainOrder() {
+		return daisyChainOrder;
+	}
+	public void setDaisyChainOrder(int daisyChainOrder) {
+		this.daisyChainOrder = daisyChainOrder;
+	}
+	public int getSensorPort() {
+		return sensorPort;
+	}
+	public void setSensorPort(int sensorPort) {
+		this.sensorPort = sensorPort;
+	}
+	
+}
