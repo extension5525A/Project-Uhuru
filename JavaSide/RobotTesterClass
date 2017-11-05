@@ -9,7 +9,7 @@ public class RobotTesterClass {
 		Robot scuttlebot = new Robot(sc);
 		
 		
-		//This tests pin names array
+		/*//This tests pin names array
 		System.out.println("Pin Names");
 		for(int i = 0; i < scuttlebot.getPinCount(); i++){
 			
@@ -25,15 +25,30 @@ public class RobotTesterClass {
 			
 			System.out.println(scuttlebot.getPinSensorValue(i));
 			
-		}//For
+		}//For*/
 
 		
+		MotorPort placeHolder;
+		System.out.println(scuttlebot.getName());
 		
+		for(int i = 0; i < scuttlebot.getMotors().length; i++){
+			
+			placeHolder = scuttlebot.getMotors()[i];
+			System.out.print(placeHolder.getName());
+			System.out.print(",");
+			System.out.print(placeHolder.getPin());
+			System.out.print(",");
+			System.out.print(placeHolder.getSensor());
+			System.out.print(",");
+			System.out.print(placeHolder.getSensorPort());
+			System.out.print(",");
+			System.out.print(placeHolder.getDaisyChainOrder());
+			System.out.print(",");
+			System.out.println(placeHolder.getCopy());
+					
+					
 		
-		
-		
-		
-		
+		}//for
 		
 		
 	}//Main
