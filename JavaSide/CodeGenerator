@@ -1,0 +1,226 @@
+
+public class CodeGenerator {
+
+	public static void generate(Robot robot){
+
+		String code =  "";
+		String auto = "";
+		String driveVaribles = "";
+		String driveEnd = "";
+
+		for(int i = 0; i < robot.getMotors().length; i ++){
+			
+			switch(robot.getMotors()[i].getSensor()){
+			case 'I':
+				auto += "nMotorEncoder(" + robot.getMotors()[i].getName() + ") = 0;\n";
+				break;
+			case 'E':
+				auto += "SensorValue[s" + robot.getMotors()[i].getName() + "] = 0;\n";
+				break;
+			case 'P':
+				auto += "SensorValue[s" + robot.getMotors()[i].getName() + "] = 0;\n";
+				break;
+			default:
+				break;
+			}//switch
+			
+			
+		}//for
+		
+		for(int i = 0; i < robot.getMotors().length; i ++){
+			
+			auto += "bool " + robot.getMotors()[i].getName() + "done = false;\n";
+			
+		}
+
+		auto += "int motorsFinished = 0;\n";
+		auto += "for(int step = 0; step < totalSteps; step++){\n";
+
+		for(int i = 0; i < robot.getMotors().length; i++){
+
+			if(robot.getMotors()[i].getSensor() != 'N'){
+				auto += robot.getMotors()[i].getName() + "done = false;\n";
+			}//if
+
+		}//for
+
+		auto += "while(motorsFinished != ports){\n";
+
+
+		//Adds the autonomus ifs
+		auto += TextManipulator.manipulate(robot, "AutonomusIf");	
+
+		auto += "}//While\n";
+		auto += "motorsFinished = 0;\n";
+		auto += "}//for\n";
+
+
+
+
+
+		for(int i = 0; i < robot.getButtons().length; i++){
+
+			driveVaribles += "int up" + robot.getButtons()[i] + " = 0;\n";
+
+		}//for
+
+		for(int i = 0; i < robot.getAxis().length; i++){
+
+			driveVaribles += "bool upCh" + robot.getAxis()[i] + " = false;\n";
+			driveVaribles += "bool downCh" + robot.getAxis()[i] + " = false;\n";
+
+		}//for
+
+		driveVaribles += "bool change = false;\n";
+
+		for(int i = 0; i < robot.getMotors().length; i++){
+
+			switch(robot.getMotors()[i].getSensor()){
+			case 'I':
+				driveVaribles += "nMotorEncoder(" + robot.getMotors()[i].getName() + ") = 0;\n";
+				break;
+			case 'E':
+				driveVaribles += "SensorValue[s" + robot.getMotors()[i].getName() + "] = 0;\n";
+				break;
+			case 'P':
+				driveVaribles += "SensorValue[s" + robot.getMotors()[i].getName() + "] = 0;\n";
+				break;
+			default:
+				break;
+			}//switch
+
+		}//for
+
+		driveVaribles += "int iterations = 0;\n";
+
+
+		
+		
+		
+
+
+		driveEnd += "iterations ++;\n";
+
+		for(int i = 0; i < robot.getButtons().length; i++){
+
+			driveEnd += "if(up" + robot.getButtons()[i] + " != vexRT[Btn" + robot.getButtons()[i] + "]){\n";
+			driveEnd += "change = true;\n";
+			driveEnd += "}\n";
+
+		}//for
+
+		for(int i = 0; i < robot.getAxis().length; i++){
+
+			driveEnd += "if(upCh" + robot.getAxis()[i] + " != (vexRT[Ch" + robot.getAxis()[i] + "] > 100)){\n";
+			driveEnd += "change = true;\n";
+			driveEnd += "}\n";
+			
+			driveEnd += "if(downCh" + robot.getAxis()[i] + " != (vexRT[Ch" + robot.getAxis()[i] + "] < -100)){\n";
+			driveEnd += "change = true;\n";
+			driveEnd += "}\n";
+
+		}//for
+		
+		
+		driveEnd += "if(change){\n";
+		
+		for(int i = 0; i < robot.getMotors().length - 1; i++){
+			
+			driveEnd += "writeDebugStream(\"%d,\", ";
+			
+			switch(robot.getMotors()[i].getSensor()){
+			case 'I':
+				driveEnd += "nMotorEncoder(" + robot.getMotors()[i].getName() + "));\n";
+				break;
+			case 'E':
+				driveEnd += "SensorValue[s" + robot.getMotors()[i].getName() + "]);\n";
+				break;
+			case 'P':
+				driveEnd += "SensorValue[s" + robot.getMotors()[i].getName() + "]);\n";
+				break;
+			default:
+				driveEnd += "0);\n";
+				break;
+			}//switch
+
+		}//for
+		
+		int lastMotor = robot.getMotors().length;
+		
+		driveEnd += "writeDebugStreamLine(\"%d,\", ";
+		switch(robot.getMotors()[lastMotor - 1].getSensor()){
+		case 'I':
+			driveEnd += "nMotorEncoder(" + robot.getMotors()[lastMotor - 1].getName() + "));\n";
+			break;
+		case 'E':
+			driveEnd += "SensorValue[s" + robot.getMotors()[lastMotor - 1].getName() + "]);\n";
+			break;
+		case 'P':
+			driveEnd += "SensorValue[s" + robot.getMotors()[lastMotor - 1].getName() + "]);\n";
+			break;
+		default:
+			driveEnd += "0);\n";
+			break;
+		}//switch
+		
+		driveEnd += "change = false;\n";
+		driveEnd += "}\n";
+		
+		for(int i = 0; i < robot.getButtons().length; i++){
+			
+			driveEnd += "up" + robot.getButtons()[i] + " = vexRT[Btn" + robot.getButtons()[i] + "];\n";
+			
+		}//for
+		
+		for(int i = 0; i < robot.getAxis().length; i++){
+
+			driveEnd += "bool upCh" + robot.getAxis()[i] + " = false;\n";
+			driveEnd += "bool downCh" + robot.getAxis()[i] + " = false;\n";
+
+		}//for
+		
+		for(int i = 0; i < robot.getAxis().length; i++){
+
+			driveEnd += "if(vexRT[Ch" + robot.getAxis()[i] + "] > 100)){\n";
+			driveEnd += "upCh" + robot.getAxis()[i] + " = true;\n";
+			driveEnd += "}\n";
+			
+			driveEnd += "if(vexRT[Ch" + robot.getAxis()[i] + "] < -100)){\n";
+			driveEnd += "downCh" + robot.getAxis()[i] + " = true;\n";
+			driveEnd += "}\n";
+
+		}//for
+		
+		
+		
+		
+		
+		
+		String complete = "";
+		complete += "------AUTONOMUS------";
+		complete += "\n";
+		complete += "\n";
+		complete += auto;
+		complete += "\n";
+		complete += "\n";
+		
+		complete += "------DRIVE VARIBLES------";
+		complete += "\n";
+		complete += "\n";
+		complete += driveVaribles;
+		complete += "\n";
+		complete += "\n";
+		
+		complete += "------DRIVE END------";
+		complete += "\n";
+		complete += "\n";
+		complete += driveEnd;
+		
+		System.out.println(complete);
+		
+		TextWriter.write(complete, "Code");
+
+	}//Generate
+
+
+}//Class
