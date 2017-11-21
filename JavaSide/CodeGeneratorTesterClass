@@ -1,0 +1,16 @@
+import java.util.Scanner;
+
+public class CodeGeneratorTestClass {
+
+	public static void main(String[] args) {
+
+
+		//Scanner sc = new Scanner(System.in);
+
+		//Robot scuttlebot = new Robot(sc);
+		
+		CodeGenerator.generate(Robot.testRobot());
+
+	}
+
+}
