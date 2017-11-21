@@ -7,7 +7,7 @@ public class Robot {
 
 
 	//This varible tells the program of its a H drive, X drive, or meccanum drive. They are H,X, and M respectively
-	private char drive;
+	//private char drive;
 	//This holds the pin names for the motors. the actual number of the motors with be place plus 1 because the arrays
 	//start at 0
 	/*private String[] pinNames = new String[10];
@@ -124,31 +124,44 @@ public class Robot {
 			motorsTemp.get(i).setSensor(sc.next().charAt(0));
 
 			//This gets the daisy chain order if I is the sensor
-			if(motorsTemp.get(i).getSensor() == 'E'){
-				
+			if(motorsTemp.get(i).getSensor() == 'I'){
+
 				System.out.println("What position in the motor in the daisy chain");
 				motorsTemp.get(i).setDaisyChainOrder((int) sc.nextLong());
-				
+
 			}else{
 
 				//This gets what port the sensor is in
 				System.out.println("What is the pin number of the sensor?");
 				motorsTemp.get(i).setSensorPort((int) sc.nextLong());
-				
+
 			}//if
 
 			//This gets what motor is is copying and of it is opposite
 			System.out.println("What motor port is this motor copying? Put 0 if none.");
 			motorsTemp.get(i).setCopy((int) sc.nextLong());
 
+			//This gets what power the motor should be run at
+			System.out.println("What power should this motor be run at?");
+			motorsTemp.get(i).setPower((int) sc.nextLong());
 
-			System.out.println("Is this your last motor? Yes or no");
-			input = sc.next();
-			if(input.equals("yes")){
+			outer:
+				while(true){
+					System.out.println("Is this your last motor? y or n");
+					input = sc.next();
+					if(input.equals("y")){
 
-				done = true;
-			}// if
+						done = true; 
+						break outer;
+					}else if(input.equals("n")){
 
+						break outer;
+					}else{
+
+
+					}
+
+				}//Repeat While
 
 		}//while
 
@@ -160,42 +173,113 @@ public class Robot {
 		int motorsIn = 0;
 
 		larger:
-		for(int i = 0; i < 10; i++){
+			for(int i = 0; i < 10; i++){
 
-			int motorPlace = 0;
-			
-			outer:
-			for(int a = 0; a < motorsTemp.size(); a++){
-				
-				/*System.out.println("i:" + i);
+				int motorPlace = 0;
+
+				outer:
+					for(int a = 0; a < motorsTemp.size(); a++){
+
+						/*System.out.println("i:" + i);
 				System.out.println("a:" + a);
 				System.out.println("pin:" + motorsTemp.get(a).getPin());*/
-				
-				if(i + 1 == motorsTemp.get(a).getPin()){	
 
-					motorPlace = a;
-					break outer;
-				}	
-				
-				/*System.out.println("place:" + motorPlace);
+						if(i + 1 == motorsTemp.get(a).getPin()){	
+
+							motorPlace = a;
+							break outer;
+						}	
+
+						/*System.out.println("place:" + motorPlace);
 				System.out.println("");*/
-				
-			}//nested for
-			
-			
-			motors[i] = motorsTemp.get(motorPlace);
-			motorsIn++;
-			
-			if(motorsIn == motorsTemp.size()){
-				break larger;
-				
-			}
 
-		}//for
+					}//nested for
+
+
+				motors[i] = motorsTemp.get(motorPlace);
+				motorsIn++;
+
+				if(motorsIn == motorsTemp.size()){
+					break larger;
+
+				}
+
+			}//for
+		
+		System.out.println("Now put in what buttons your robot uses. If your robot used button 8U and 5U type it in like this: 8U,5U");
+		System.out.println("No spaces, all caps, and commas inbetween the buttons");
+		input = sc.next();
+		
+		setButtons(input.toUpperCase().split(","));
+		
+		System.out.println("Now put in what axis your robot uses. If your robot used axis 1 and 2 type it in like this: 1,");
+		System.out.println("No spaces, and commas inbetween the buttons");
+		input = sc.next();
+		
+		setAxis(input.split(","));
+		
+		
 
 	}//Constructor
 
-	public char getDrive() {
+	public Robot() {
+		
+	}
+
+	public static Robot testRobot(){
+	
+		Robot robot = new Robot();
+	
+		robot.setMotors(new MotorPort[5]);
+		
+		MotorPort motor1 = new MotorPort();
+		motor1.setName("BS");
+		motor1.setPin(1);
+		motor1.setSensor('E');
+		motor1.setSensorPort(1);
+		motor1.setPower(60);
+		robot.getMotors()[0] = motor1;
+		
+		MotorPort motor2 = new MotorPort();
+		motor2.setName("FL");
+		motor2.setPin(2);
+		motor2.setSensor('I');
+		motor2.setDaisyChainOrder(0);
+		motor2.setPower(30);
+		robot.getMotors()[1] = motor2;
+		
+		MotorPort motor3 = new MotorPort();
+		motor3.setName("FR");
+		motor3.setPin(3);
+		motor3.setSensor('I');
+		motor3.setPower(30);
+		robot.getMotors()[2] = motor3;
+		
+		MotorPort motor4 = new MotorPort();
+		motor4.setName("BL");
+		motor4.setPin(4);
+		motor4.setSensor('I');
+		motor4.setPower(30);
+		robot.getMotors()[3] = motor4;
+		
+		MotorPort motor5 = new MotorPort();
+		motor5.setName("BR");
+		motor5.setPin(5);
+		motor5.setSensor('I');
+		motor5.setPower(30);
+		robot.getMotors()[4] = motor5;
+		
+		
+		String temp[] = {"8U", "8D"};
+		robot.setButtons(temp);
+		
+		String temp2[] = {"3", "2"};
+		robot.setAxis(temp2);
+	
+		return robot;
+	}
+	
+	/*public char getDrive() {
 		return drive;
 	}
 
@@ -203,7 +287,7 @@ public class Robot {
 		this.drive = drive;
 	}
 
-	/*public char[] getPinSensor() {
+	public char[] getPinSensor() {
 		return pinSensor;
 	}
 
