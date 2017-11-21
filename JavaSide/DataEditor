@@ -1,0 +1,72 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class DataEditor {
+
+	public static String getData(Robot robot) {
+		
+		int counts = 0;
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		String data = "";
+		
+		String complete = "";
+		
+		try {
+
+			fr = new FileReader("data");
+			br = new BufferedReader(fr);
+
+			String sCurrentLine;
+
+			while ((sCurrentLine = br.readLine()) != null) {
+				data += sCurrentLine + "\n";
+				counts++;
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (br != null)
+					br.close();
+
+				if (fr != null)
+					fr.close();
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+		}
+		
+		
+		
+		String[] splitData = data.split("\n");
+		
+		complete += "int auto[" + counts + "][" + robot.getMotors().length + "] = { ";
+		
+		for(int i = 0; i < splitData.length; i++){
+			
+			complete += "{" + splitData[i] + "},";
+			
+			
+		}
+		
+		complete += "};";
+		
+		
+		return complete;
+		
+	}
+
+}
