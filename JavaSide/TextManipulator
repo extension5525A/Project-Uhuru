@@ -1,0 +1,154 @@
+import java.util.Scanner;
+
+public class TextManipulator {
+
+	static String manipulate(Robot robot, String textFile){
+		
+		String completed = "";
+		String compare = TextOpener.open(textFile);
+
+		for(int i = 0; i < robot.getMotors().length; i++){
+
+			compare = TextOpener.open(textFile);
+			
+			
+			if(robot.getMotors()[i].getSensor() != 'N'){
+
+				for(int a = 0; a < compare.length(); a++){
+
+
+
+					//sensor If
+					if(compare.charAt(a) == '$'){
+
+						if(robot.getMotors()[i].getSensor() == 'I'){
+
+							compare = compare.substring(0, a) + "nMotorEncoder(" + robot.getMotors()[i].getName() + ")" +
+									compare.substring(a + 1, compare.length()) ;
+
+
+						}else{
+
+							compare = compare.substring(0, a) + "SensorValue[s" + robot.getMotors()[i].getName() + "]" + 
+									compare.substring(a + 1, compare.length()) ;
+
+						}//Sensor type if
+
+
+					}//Sensor if
+
+
+					//Motor Name If
+					if(compare.charAt(a) == '@'){
+						compare = compare.substring(0, a) + robot.getMotors()[i].getName() +
+								compare.substring(a + 1, compare.length()) ;
+					}//Motor Name if
+
+
+
+
+
+					//Power If
+					if(compare.charAt(a) == '%'){
+						compare = compare.substring(0, a) + robot.getMotors()[i].getPower() +
+								compare.substring(a + 1, compare.length()) ;
+					}//Power if
+
+					//Pin Number If
+					if(compare.charAt(a) == '^'){
+						compare = compare.substring(0, a) + (robot.getMotors()[i].getPin() - 1) +
+								compare.substring(a + 1, compare.length()) ;
+					}//Pin Number if
+
+
+
+
+
+					//Linked Motor If
+					if(compare.charAt(a) == '#'){
+
+						for(int b = 0; b < robot.getMotors().length; b ++){
+
+							if(Math.abs(robot.getMotors()[b].getCopy()) == robot.getMotors()[i].getPin()){
+
+								if(robot.getMotors()[b].getCopy() > 0){
+
+									compare = compare.substring(0, a) + "motor[" + robot.getMotors()[b].getName() + "] = " + robot.getMotors()[b].getPower() + 
+											";" + compare.substring(a + 1, compare.length());
+
+								}else{
+
+									compare = compare.substring(0, a) + "motor[" + robot.getMotors()[b].getName() + "] = -" + robot.getMotors()[b].getPower() + 
+											";" + compare.substring(a + 1, compare.length());
+
+								}// if/else
+
+							}//if
+
+						}//Nested for
+
+					}//Linked Motor if
+
+
+
+					//Opposite Linked Motor If
+					if(compare.charAt(a) == '~'){
+
+						for(int b = 0; b < robot.getMotors().length; b ++){
+
+							if(Math.abs(robot.getMotors()[b].getCopy()) == robot.getMotors()[i].getPin()){
+
+								if(robot.getMotors()[b].getCopy() > 0){
+
+									compare = compare.substring(0, a) + "motor[" + robot.getMotors()[b].getName() + "] = -" + robot.getMotors()[b].getPower() + 
+											";" + compare.substring(a + 1, compare.length());
+
+								}else{
+
+									compare = compare.substring(0, a) + "motor[" + robot.getMotors()[b].getName() + "] = " + robot.getMotors()[b].getPower() + 
+											";" + compare.substring(a + 1, compare.length());
+
+								}// if/else
+
+							}//if
+
+						}//Nested for
+
+					}//Opposite Linked Motor if
+
+
+				}//nested for
+
+
+				completed += compare;
+				
+			}//Big if
+
+			
+			
+		}//for
+		
+		String completed1 = completed.replaceAll("~", "");
+		String completed2 = completed1.replaceAll("#", "");
+		
+
+		return completed2;
+	}
+
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+
+		Robot scuttlebot = new Robot(sc);
+
+		System.out.println(manipulate(scuttlebot, "AutonomusIf"));
+
+
+	}
+
+
+
+
+
+}
